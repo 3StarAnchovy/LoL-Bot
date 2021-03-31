@@ -5,10 +5,13 @@
 # 2. 키 분리
 # 3. 모듈화 후 디스코드 봇에서 사용
 import requests
+import json
 class RiotData:
     def __init__(self,userID): #set
+        with open('key.json') as json_file:
+            json_data = json.load(json_file)
         self.userID=userID
-        self.api_key = "RGAPI-cce887fb-67e8-487a-a70d-2476970599c2"
+        self.api_key = json_data['Riot_Key'] #로컬에 있는 json 파일의 value로 키 세팅
         self.url="https://kr.api.riotgames.com"
     def getUserData(self): #유저 정보
         url = self.url+"/lol/summoner/v4/summoners/by-name/"+self.userID+"?api_key="+self.api_key
