@@ -29,12 +29,18 @@ class RiotData:
         url = self.DataDragon + "/champion.json"
         res = requests.get(url)
         champ_data = res.json().get('data')
-        return champ_data
+        for champ_name , chame_des in champ_data.items():
+            #print(champ_data.get(champ_name).get('key'))
+            for rotation in rotation_list:
+                #print(rotation)
+                if champ_data.get(champ_name).get('key') == str(rotation):
+                    print(champ_data.get(champ_name).get('name'))
+        #return champ_data
 
 userID = input("userID : ")
 test = RiotData(userID)
 print(test.getUserData().json(),"\n")
-print(type(test.getChampRotation()))
+test.getChampRotation()
 
 #test1
 
