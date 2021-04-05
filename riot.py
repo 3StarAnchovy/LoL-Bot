@@ -18,7 +18,11 @@ class RiotData:
     def getUserData(self): #유저 정보
         url = self.url+"/lol/summoner/v4/summoners/by-name/"+self.userID+"?api_key="+self.api_key
         res = requests.get(url)
-        return res
+        sum_Lev = res.json().get('summonerLevel')
+        sum_ID = res.json().get('id')
+        print("소환사 레벨 : ", sum_Lev)
+        print("summonerID : ", sum_ID)
+
     
     def getChampRotation(self): #챔프 로테이션
         url = self.url + "/lol/platform/v3/champion-rotations"+"?api_key="+self.api_key
@@ -39,12 +43,13 @@ class RiotData:
 
 userID = input("userID : ")
 test = RiotData(userID)
-print(test.getUserData().json(),"\n")
+test.getUserData()
+print("\n")
 test.getChampRotation()
 
 #test1
 
-#api_key = "RGAPI-cce887fb-67e8-487a-a70d-2476970599c2"
+#api_key = "RGAPI-e829d34c-823a-48e2-8496-f25301e2ceee"
 #url ="https://kr.api.riotgames.com"+"/lol/summoner/v4/summoners/by-name/"+"HongJiMin"+"?api_key="+api_key
 #res = requests.get(url)
 #브런치 힘들어,,
