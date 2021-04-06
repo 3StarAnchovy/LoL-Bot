@@ -40,23 +40,23 @@ class RiotData:
 
         url_League = self.url + "/lol/league/v4/entries/by-summoner/" + sum_ID + "?api_key=" + self.api_key
         res_League = requests.get(url_League)
-        queue_List = res_League.json()  #소환사 티어, 승률, json파일 파싱
+        que_List = res_League.json()  #소환사 티어, 승률, json파일 파싱
         
-        for i in range(len(queue_List)):
-            que_Type = queue_List[i].get('queueType')
+        for que_Data in que_List:
+            que_Type = que_Data.get('queueType')
             if(que_Type == "RANKED_SOLO_5x5"):
                 print("솔로랭크 정보입니다.")  #솔랭 전적 출력
-                print("티어 : ", queue_List[0].get('tier'), queue_List[0].get('rank'), queue_List[0].get('leaguePoints'), "포인트")
+                print("티어 : ", que_Data.get('tier'), que_Data.get('rank'), que_Data.get('leaguePoints'), "포인트")
                 #티어, 랭크, 리그포인트 출력
-                win = int(queue_List[0].get('wins'))
-                lose = int(queue_List[0].get('losses'))
+                win = int(que_Data.get('wins'))
+                lose = int(que_Data.get('losses'))
                 print("승률 : ", round((win/(lose+win))*100, 1), "%")  #승률 출력
             elif(que_Type == "RANKED_FLEX_SR"):
                 print("자유랭크 정보입니다.")  #자랭 전적 출력
-                print("티어 : ", queue_List[1].get('tier'), queue_List[1].get('rank'), queue_List[1].get('leaguePoints'), "포인트")
+                print("티어 : ", que_Data.get('tier'), que_Data.get('rank'), que_Data.get('leaguePoints'), "포인트")
                 #티어, 랭크, 리그포인트 출력
-                win = int(queue_List[1].get('wins'))
-                lose = int(queue_List[1].get('losses'))
+                win = int(que_Data.get('wins'))
+                lose = int(que_Data.get('losses'))
                 print("승률 : ", round((win/(lose+win))*100, 1), "%")  #승률 출력
             else:
                 print("자료가 없습니다.")
@@ -84,6 +84,7 @@ class RiotData:
                 if champ_data.get(champ_name).get('key') == str(champ[0]):
                     return champ_data.get(champ_name).get('name')
         #return champ_data
+        
     def getCurrentGame(self): #인게임 출력 #챔프선택 단계일때 예외처리해야함
         url = self.url+"/lol/spectator/v4/active-games/by-summoner/"+ self.getEncryptedId() +"?api_key="+self.api_key
         res = requests.get(url)
@@ -94,5 +95,5 @@ class RiotData:
 userID = input("userID : ")
 test = RiotData(userID)
 print(" ",test.getCurrentGame())
-#test.getUserData()
+test.getUserData()
 #test.getChampRotation()
