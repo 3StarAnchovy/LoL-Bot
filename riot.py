@@ -81,8 +81,7 @@ class RiotData:
             champ_data = res.json().get('data')
             for champ_name , chame_des in champ_data.items():
                 #print(champ_data.get(champ_name).get('key'))
-                if champ_data.get(champ_name).get('key') == str(champ):
-                    print("1111")
+                if champ_data.get(champ_name).get('key') == str(champ[0]):
                     return champ_data.get(champ_name).get('name')
         #return champ_data
     def getCurrentGame(self): #인게임 출력 #챔프선택 단계일때 예외처리해야함
@@ -90,8 +89,7 @@ class RiotData:
         res = requests.get(url)
         participants = res.json().get('participants') #type = list
         for user in participants:
-            print(user.get('summonerName')," ",self.getChampRotation(110))
-
+            print(user.get('summonerName')," ",self.getChampRotation(user.get('championId')))
 
 userID = input("userID : ")
 test = RiotData(userID)
