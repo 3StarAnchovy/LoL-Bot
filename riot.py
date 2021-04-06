@@ -4,6 +4,11 @@
 # 1. 각자 데이터 출력하게끔 메소드 생성 및 주석 작성
 # 2. 키 분리
 # 3. 모듈화 후 디스코드 봇에서 사용
+
+#Riot API
+#userID 입력했을때 id,accountid,puuid 뱉음
+#api에서 encryptedID를 요구할 땐 id를 입력하면 됨
+
 import requests
 import json
 class RiotData:
@@ -14,6 +19,16 @@ class RiotData:
         self.api_key = json_data['Riot_Key'] #로컬에 있는 json 파일의 value로 키 세팅
         self.url = "https://kr.api.riotgames.com"
         self.DataDragon = "http://ddragon.leagueoflegends.com/cdn/11.6.1/data/ko_KR"
+    
+    def getEncryptedId(self): #암호화된 id 리턴
+        url = self.url+"/lol/summoner/v4/summoners/by-name/"+self.userID+"?api_key="+self.api_key
+        res = requests.get(url)
+        return res.json().get('id')
+    
+    def getAccountID(self): #Account id 리턴
+        url = self.url+"/lol/summoner/v4/summoners/by-name/"+self.userID+"?api_key="+self.api_key
+        res = requests.get(url)
+        return res.json().get('accountId')
     
     def getUserData(self): #유저 정보
         url = self.url+"/lol/summoner/v4/summoners/by-name/"+self.userID+"?api_key="+self.api_key
@@ -46,25 +61,40 @@ class RiotData:
             else:
                 print("자료가 없습니다.")
 
-    def getChampRotation(self): #챔프 로테이션
-        url = self.url + "/lol/platform/v3/champion-rotations"+"?api_key="+self.api_key
-        res = requests.get(url)
-        rotation_list = res.json().get('freeChampionIds') #type = list
-        print("챔피언 리스트 배열 : ",rotation_list,"\n")
+    def getChampRotation(self,*champ): #챔프 로테이션
+        if not champ: #인자 안 들어올 때
+            url = self.url + "/lol/platform/v3/champion-rotations"+"?api_key="+self.api_key
+            res = requests.get(url)
+            rotation_list = res.json().get('freeChampionIds') #type = list
+            print("챔피언 리스트 배열 : ",rotation_list,"\n")
         
-        url = self.DataDragon + "/champion.json"
-        res = requests.get(url)
-        champ_data = res.json().get('data')
-        for champ_name , chame_des in champ_data.items():
-            #print(champ_data.get(champ_name).get('key'))
-            for rotation in rotation_list:
-                #print(rotation)
-                if champ_data.get(champ_name).get('key') == str(rotation):
-                    print(champ_data.get(champ_name).get('name'))
+            url = self.DataDragon + "/champion.json"
+            res = requests.get(url)
+            champ_data = res.json().get('data')
+            for champ_name , chame_des in champ_data.items():
+                for rotation in rotation_list:
+                    if champ_data.get(champ_name).get('key') == str(rotation):
+                        print(champ_data.get(champ_name).get('name'))
+        else: #인자 들어올 떄
+            url = self.DataDragon + "/champion.json"
+            res = requests.get(url)
+            champ_data = res.json().get('data')
+            for champ_name , chame_des in champ_data.items():
+                #print(champ_data.get(champ_name).get('key'))
+                if champ_data.get(champ_name).get('key') == str(champ):
+                    print("1111")
+                    return champ_data.get(champ_name).get('name')
         #return champ_data
+    def getCurrentGame(self): #인게임 출력 #챔프선택 단계일때 예외처리해야함
+        url = self.url+"/lol/spectator/v4/active-games/by-summoner/"+ self.getEncryptedId() +"?api_key="+self.api_key
+        res = requests.get(url)
+        participants = res.json().get('participants') #type = list
+        for user in participants:
+            print(user.get('summonerName')," ",self.getChampRotation(110))
 
 
 userID = input("userID : ")
 test = RiotData(userID)
-test.getUserData()
+print(" ",test.getCurrentGame())
+#test.getUserData()
 #test.getChampRotation()
