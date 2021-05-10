@@ -71,10 +71,12 @@ class RiotData:
             url = self.DataDragon + "/champion.json"
             res = requests.get(url)
             champ_data = res.json().get('data')
+            sum_rotation = []
             for champ_name , chame_des in champ_data.items():
                 for rotation in rotation_list:
                     if champ_data.get(champ_name).get('key') == str(rotation):
-                        print(champ_data.get(champ_name).get('name'))
+                        sum_rotation.append(champ_data.get(champ_name).get('name'))
+            return sum_rotation
         else: #인자 들어올 떄
             url = self.DataDragon + "/champion.json"
             res = requests.get(url)
@@ -92,8 +94,8 @@ class RiotData:
         for user in participants:
             print(user.get('summonerName')," ",self.getChampRotation(user.get('championId')))
 
-userID = input("userID : ")
-test = RiotData(userID)
-print(" ",test.getCurrentGame())
-test.getUserData()
+#userID = input("userID : ")
+#test = RiotData(userID)
+#print(" ",test.getCurrentGame())
+#test.getUserData()
 #test.getChampRotation()

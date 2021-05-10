@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import json
+import riot
 
 class ChatBot(discord.Client):
     async def on_ready(self):
@@ -17,6 +18,13 @@ class ChatBot(discord.Client):
             msg = "정현목\n홍지민"
             await channel.send(msg)
             return None
+        if message.content == "!로테이션":
+            rotation = riot.RiotData("HongJiMin").getChampRotation() #추후 수정
+            channel = message.channel
+            print(rotation)
+            await channel.send(rotation)
+            return None
+            
     
     def runBot(self):
         with open('key.json') as json_file:
