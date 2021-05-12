@@ -24,7 +24,6 @@ class ChatBot(discord.Client):
             print(rotation)
             await channel.send(rotation)
             return None
-            
     
     def runBot(self):
         with open('key.json') as json_file:
